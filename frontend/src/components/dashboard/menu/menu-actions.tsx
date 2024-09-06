@@ -1,21 +1,21 @@
 "use client";
 
-import { RestaurantDTO } from "@frontend/lib/types";
+import { VendorDTO } from "@frontend/lib/types";
 import { ProductCategoryDTO } from "@medusajs/types";
 import { CreateCategoryDrawer } from "./create-category-drawer";
 import { CreateProductDrawer } from "./create-product-drawer";
 
 export function MenuActions({
-  restaurant,
-  categories,
+   vendor,
+   categories,
 }: {
-  restaurant: RestaurantDTO;
-  categories: ProductCategoryDTO[];
+   vendor: VendorDTO;
+   categories: ProductCategoryDTO[];
 }) {
-  return (
-    <div className="flex gap-4">
-      <CreateCategoryDrawer restaurant={restaurant} />
-      <CreateProductDrawer restaurant={restaurant} categories={categories} />
-    </div>
-  );
+   return (
+      <div className="flex gap-4">
+         <CreateCategoryDrawer vendor={vendor} />
+         <CreateProductDrawer vendor={vendor} categories={categories} />
+      </div>
+   );
 }

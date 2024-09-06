@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Login | Medusa Eats",
-  description: "Order food from your favorite restaurants",
+   title: "Login | Cari Medical",
+   description: "Order food from your favorite vendors",
 };
 
 export default function RootLayout({
-  children,
+   children,
 }: Readonly<{
-  children: React.ReactNode;
+   children: React.ReactNode;
 }>) {
-  return <div className="justify-center mx-auto max-w-96">{children}</div>;
+   return <div className="justify-center mx-auto max-w-96">{children}</div>;
 }

@@ -1,13 +1,13 @@
 import { defineMiddlewares } from "@medusajs/medusa";
 import { authenticate } from "@medusajs/medusa/dist/utils";
 
-const isAllowed = (req, res, next) => {
-  const { restaurant_id, driver_id } = req.auth_context.app_metadata;
+const isAllowed = (req: any, res: any, next: any) => {
+  const { vendor_id, driver_id } = req.auth_context.app_metadata;
 
-  if (restaurant_id || driver_id) {
+  if (vendor_id || driver_id) {
     const user = {
-      actor_type: restaurant_id ? "restaurant" : "driver",
-      user_id: restaurant_id || driver_id,
+      actor_type: vendor_id ? "vendor" : "driver",
+      user_id: vendor_id || driver_id,
     };
 
     req.user = user;
@@ -15,8 +15,7 @@ const isAllowed = (req, res, next) => {
     next();
   } else {
     res.status(403).json({
-      message:
-        "Forbidden. Reason: No restaurant_id or driver_id in app_metadata",
+      message: "Forbidden. Reason: No vendor_id or driver_id in app_metadata",
     });
   }
 };
@@ -26,25 +25,22 @@ export default defineMiddlewares({
     {
       method: ["GET"],
       matcher: "/users/me",
-      middlewares: [
-        authenticate(["driver", "restaurant"], "bearer"),
-        isAllowed,
-      ],
+      middlewares: [authenticate(["driver", "vendor"], "bearer"), isAllowed],
     },
     {
       method: ["POST"],
       matcher: "/users",
       middlewares: [
-        authenticate(["driver", "restaurant"], "bearer", {
+        authenticate(["driver", "vendor"], "bearer", {
           allowUnregistered: true,
         }),
       ],
     },
     {
       method: ["POST"],
-      matcher: "/restaurants/:id/products",
+      matcher: "/vendors/:id/products",
       middlewares: [
-        authenticate(["restaurant", "admin"], "bearer", {
+        authenticate(["vendor", "admin"], "bearer", {
           allowUnregistered: true,
         }),
       ],

@@ -6,10 +6,10 @@ export * from "./create-delivery";
 export * from "./create-fulfillment";
 export * from "./create-order";
 export {
-  CreateDeliveryStepInput,
-  deleteDeliveryDriversStep,
-  deleteDeliveryDriversStepId,
+   CreateDeliveryStepInput,
+   deleteDeliveryDriversStep,
+   deleteDeliveryDriversStepId,
 } from "./delete-delivery-drivers";
 export * from "./find-driver";
-export * from "./notify-restaurant";
+export * from "./notify-vendor";
 export * from "./update-delivery";

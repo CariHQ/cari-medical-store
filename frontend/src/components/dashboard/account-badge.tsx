@@ -1,76 +1,77 @@
 import {
-  DeliveryDTO,
-  DeliveryStatus,
-  DriverDTO,
-  RestaurantDTO,
+   DeliveryDTO,
+   DeliveryStatus,
+   DriverDTO,
+   VendorDTO,
 } from "@frontend/lib/types";
 import { Badge, Text } from "@medusajs/ui";
 import Image from "next/image";
 
 const BACKEND_URL =
-  process.env.BACKEND_URL ||
-  process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "http://localhost:9000";
+   process.env.BACKEND_URL ||
+   process.env.NEXT_PUBLIC_BACKEND_URL ||
+   "http://localhost:9000";
 
 async function getDeliveries(query: string) {
-  const { deliveries } = await fetch(
-    `${BACKEND_URL}/deliveries?${query}&delivery_status=${DeliveryStatus.DELIVERED}`,
-    {
-      next: {
-        tags: ["deliveries"],
-      },
-    }
-  ).then((res) => res.json());
-  return deliveries;
+   const { deliveries } = await fetch(
+      `${BACKEND_URL}/deliveries?${query}&delivery_status=${DeliveryStatus.DELIVERED}`,
+      {
+         next: {
+            tags: ["deliveries"],
+         },
+      }
+   ).then((res) => res.json());
+   return deliveries;
 }
 
 export default async function AccountBadge({
-  data,
-  type,
+   data,
+   type,
 }: {
-  data: DriverDTO | RestaurantDTO;
-  type: "driver" | "restaurant";
+   data: DriverDTO | VendorDTO;
+   type: "driver" | "vendor";
 }) {
-  let name = "";
-  let query = "";
+   let name = "";
+   let query = "";
 
-  if (type === "driver") {
-    const driver = data as DriverDTO;
-    name = driver.first_name + " " + driver.last_name;
-    query = "driver_id=" + driver.id;
-  }
+   if (type === "driver") {
+      const driver = data as DriverDTO;
+      name = driver.first_name + " " + driver.last_name;
+      query = "driver_id=" + driver.id;
+   }
 
-  if (type === "restaurant") {
-    const restaurant = data as RestaurantDTO;
-    name = restaurant.name;
-    query = "restaurant_id=" + restaurant.id;
-  }
+   if (type === "vendor") {
+      const vendor = data as VendorDTO;
+      name = vendor.name;
+      query = "vendor_id=" + vendor.id;
+   }
 
-  const deliveries = (await getDeliveries(query)) as DeliveryDTO[];
+   const deliveries = (await getDeliveries(query)) as DeliveryDTO[];
 
-  return (
-    <div className="flex flex-col justify-between">
-      <div className="flex gap-4 items-center">
-        <div className="flex flex-col h-28 md:text-right justify-between">
-          <Text className="font-semibold">{name}</Text>
-          <Text>{data.email}</Text>
-          <Text>{data.phone}</Text>
-          <Badge size="small" className="w-fit md:self-end">
-            Deliveries: <span className="font-bold">{deliveries?.length}</span>
-          </Badge>
-        </div>
-        <Image
-          src={
-            "https://robohash.org/" +
-            data.id +
-            "?size=200x200&set=set1&bgset=bg1"
-          }
-          alt={name}
-          className="h-28 w-28 rounded-full border-2 border-ui-border-base"
-          width={200}
-          height={200}
-        />
+   return (
+      <div className="flex flex-col justify-between">
+         <div className="flex gap-4 items-center">
+            <div className="flex flex-col h-28 md:text-right justify-between">
+               <Text className="font-semibold">{name}</Text>
+               <Text>{data.email}</Text>
+               <Text>{data.phone}</Text>
+               <Badge size="small" className="w-fit md:self-end">
+                  Deliveries:{" "}
+                  <span className="font-bold">{deliveries?.length}</span>
+               </Badge>
+            </div>
+            <Image
+               src={
+                  "https://robohash.org/" +
+                  data.id +
+                  "?size=200x200&set=set1&bgset=bg1"
+               }
+               alt={name}
+               className="h-28 w-28 rounded-full border-2 border-ui-border-base"
+               width={200}
+               height={200}
+            />
+         </div>
       </div>
-    </div>
-  );
+   );
 }

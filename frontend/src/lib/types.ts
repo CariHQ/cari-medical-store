@@ -1,129 +1,129 @@
 import { CartLineItemDTO, OrderLineItemDTO, ProductDTO } from "@medusajs/types";
 
 export enum DeliveryStatus {
-  PENDING = "pending",
-  RESTAURANT_DECLINED = "restaurant_declined",
-  RESTAURANT_ACCEPTED = "restaurant_accepted",
-  PICKUP_CLAIMED = "pickup_claimed",
-  RESTAURANT_PREPARING = "restaurant_preparing",
-  READY_FOR_PICKUP = "ready_for_pickup",
-  IN_TRANSIT = "in_transit",
-  DELIVERED = "delivered",
+   PENDING = "pending",
+   VENDOR_DECLINED = "vendor_declined",
+   VENDOR_ACCEPTED = "vendor_accepted",
+   PICKUP_CLAIMED = "pickup_claimed",
+   VENDOR_PREPARING = "vendor_preparing",
+   READY_FOR_PICKUP = "ready_for_pickup",
+   IN_TRANSIT = "in_transit",
+   DELIVERED = "delivered",
 }
 
-export interface RestaurantDTO {
-  id: string;
-  handle: string;
-  is_open: boolean;
-  name: string;
-  description?: string;
-  address: string;
-  phone: string;
-  email: string;
-  image_url?: string;
-  created_at: Date;
-  updated_at: Date;
-  products?: ProductDTO[];
+export interface VendorDTO {
+   id: string;
+   handle: string;
+   is_open: boolean;
+   name: string;
+   description?: string;
+   address: string;
+   phone: string;
+   email: string;
+   image_url?: string;
+   created_at: Date;
+   updated_at: Date;
+   products?: ProductDTO[];
 }
 
-export interface RestaurantAdminDTO {
-  id: string;
-  restaurant: RestaurantDTO;
-  first_name: string;
-  last_name: string;
-  email: string;
-  created_at: Date;
-  updated_at: Date;
+export interface VendorAdminDTO {
+   id: string;
+   vendor: VendorDTO;
+   first_name: string;
+   last_name: string;
+   email: string;
+   created_at: Date;
+   updated_at: Date;
 }
 
-export interface RestaurantProductDTO {
-  restaurant_id: string;
-  product_id: string;
+export interface VendorProductDTO {
+   vendor_id: string;
+   product_id: string;
 }
 
-export interface CreateRestaurantDTO {
-  name: string;
-  handle: string;
-  address: string;
-  phone: string;
-  email: string;
-  image_url?: string;
-  is_open?: boolean;
+export interface CreateVendorDTO {
+   name: string;
+   handle: string;
+   address: string;
+   phone: string;
+   email: string;
+   image_url?: string;
+   is_open?: boolean;
 }
 
-export type UpdateRestaurantDTO = Partial<CreateRestaurantDTO>;
+export type UpdateVendorDTO = Partial<CreateVendorDTO>;
 
-export interface CreateRestaurantAdminDTO {
-  email: string;
-  first_name: string;
-  last_name: string;
-  restaurant_id: string;
+export interface CreateVendorAdminDTO {
+   email: string;
+   first_name: string;
+   last_name: string;
+   vendor_id: string;
 }
 
 export interface CreateAdminInviteDTO {
-  resadm_id: string;
-  role?: string | null;
-  email?: string;
+   resadm_id: string;
+   role?: string | null;
+   email?: string;
 }
 
 export interface DeliveryDTO {
-  id: string;
-  transaction_id: string;
-  driver_id?: string;
-  cart_id?: string;
-  order_id?: string;
-  restaurant_id: string;
-  delivered_at?: Date;
-  delivery_status: DeliveryStatus;
-  created_at: Date;
-  updated_at: Date;
-  eta?: Date;
-  items: DeliveryItemDTO[];
+   id: string;
+   transaction_id: string;
+   driver_id?: string;
+   cart_id?: string;
+   order_id?: string;
+   vendor_id: string;
+   delivered_at?: Date;
+   delivery_status: DeliveryStatus;
+   created_at: Date;
+   updated_at: Date;
+   eta?: Date;
+   items: DeliveryItemDTO[];
 }
 
 export type DeliveryItemDTO = (CartLineItemDTO | OrderLineItemDTO) & {
-  quantity: number;
+   quantity: number;
 };
 
 export interface DriverDTO {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  avatar_url?: string;
-  created_at: Date;
-  updated_at: Date;
+   id: string;
+   first_name: string;
+   last_name: string;
+   email: string;
+   phone: string;
+   avatar_url?: string;
+   created_at: Date;
+   updated_at: Date;
 }
 
 export interface DeliveryDriverDTO {
-  id: string;
-  delivery_id: string;
-  driver_id: string;
+   id: string;
+   delivery_id: string;
+   driver_id: string;
 }
 
 export interface CreateDeliveryDTO {
-  restaurant_id: string;
-  cart_id: string;
+   vendor_id: string;
+   cart_id: string;
 }
 
 export interface UpdateDeliveryDTO extends Partial<DeliveryDTO> {
-  id: string;
+   id: string;
 }
 
 export interface CreateDriverDTO {
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  avatar_url?: string;
+   first_name: string;
+   last_name: string;
+   email: string;
+   phone: string;
+   avatar_url?: string;
 }
 
 export interface UpdateDriverDTO extends Partial<DriverDTO> {
-  id: string;
+   id: string;
 }
 
 export interface CreateDeliveryDriverDTO {
-  delivery_id: string;
-  driver_id: string;
+   delivery_id: string;
+   driver_id: string;
 }

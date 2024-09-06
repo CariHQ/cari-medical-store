@@ -9,7 +9,7 @@
 </p>
 
 <h1 align="center">
-  Medusa Eats - Food Delivery Platform Demo
+  Cari Medical - Food Delivery Platform Demo
 </h1>
 
 <p align="center">
@@ -29,29 +29,29 @@ An Uber Eats style delivery platform running on Medusa 2.0 and Next.js 14.</p>
 
 # Overview
 
-Medusa Eats is built with:
+Cari Medical is built with:
 
-- [Medusa](https://medusajs.com/)
-- [Next.js](https://nextjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Typescript](https://www.typescriptlang.org/)
+-  [Medusa](https://medusajs.com/)
+-  [Next.js](https://nextjs.org/)
+-  [Tailwind CSS](https://tailwindcss.com/)
+-  [Typescript](https://www.typescriptlang.org/)
 
 Features include:
 
-- Restaurant storefront
-- Realtime order status dashboards
-- Driver and restaurant dashboards
-- User roles
-- Authentication
-- Medusa Workflows
-- Realtime Server Sent Event
+-  Vendor storefront
+-  Realtime order status dashboards
+-  Driver and vendor dashboards
+-  User roles
+-  Authentication
+-  Medusa Workflows
+-  Realtime Server Sent Event
 
 # Project structure
 
 The project consists of two main directories:
 
-- `/backend` contains the Medusa 2.0 project with all the customizations.
-- `/frontend` contains the Next.js project.
+-  `/backend` contains the Medusa 2.0 project with all the customizations.
+-  `/frontend` contains the Next.js project.
 
 # Quickstart
 
@@ -89,7 +89,7 @@ cp .env.template .env
 
 ### Set up and seed the database
 
-Create a Postgres database called `medusa-eats`.
+Create a Postgres database called `cari-medical-store`.
 
 The repo contains a setup script to build the project, run migrations and seed dummy data.
 
@@ -104,7 +104,7 @@ yarn setup-db
 This will also create an admin user with the following credentials:
 
 ```
-email: admin@test.com
+email: admin@email.com
 pasword: supersecret
 ```
 
@@ -136,15 +136,15 @@ The Next.js frontend is now running on http://localhost:3000.
 
 ### Create user accounts
 
-We're gonna create a restaurant admin and driver account so we'll have access to both sides of the platform.
+We're gonna create a vendor admin and driver account so we'll have access to both sides of the platform.
 
-**Create restaurant admin account**
+**Create vendor admin account**
 
 1. Go to http://localhost:3000/signup.
-2. Select 'I'm a restaurant'.
-3. Select the restaurant you want to create an admin for.
+2. Select 'I'm a vendor'.
+3. Select the vendor you want to create an admin for.
 4. Fill out the remaining form fields and click 'Create account'.
-5. You can now log in as a restaurant admin and access the restaurant dashboard at http://localhost:3000/dashboard/restaurant.
+5. You can now log in as a vendor admin and access the vendor dashboard at http://localhost:3000/dashboard/vendor.
 
 **Create driver account**
 
@@ -153,30 +153,30 @@ We're gonna create a restaurant admin and driver account so we'll have access to
 
 ### Place an order and handle a delivery
 
-> To go through the entire delivery workflow in realtime, you'll need to log into both a restaurant and a driver account. To do so, use an icognito window or second browser.
+> To go through the entire delivery workflow in realtime, you'll need to log into both a vendor and a driver account. To do so, use an icognito window or second browser.
 
 1. Go to the storefront at http://localhost:3000/.
-2. Select a restaurant from the list.
+2. Select a vendor from the list.
 3. Add menu items to you delivery by clicking the + buttons.
 4. Click the shopping bag button on the top right.
 5. Click 'Go to checkout'.
 6. Complete the form and place you order. A live order status dashboard will show up.
-7. In a new tab, go to http://localhost:3000/dashboard/restaurant and log in as an admin for the restaurant you just placed an order at.
+7. In a new tab, go to http://localhost:3000/dashboard/vendor and log in as an admin for the vendor you just placed an order at.
 8. Your order should be visible in the "Incoming orders" column. Click the button to accept the incoming order.
 9. In an incognito window, go to http://localhost:3000/dashboard/driver and log in as a driver.
-10. The accepted order will show up on your dashboard. Click the button to claim it.
-11. The order will go through the different stages on all dashboards in realtime. You can progress the order by marking each stage as complete on the relevant dashboard.
+10.   The accepted order will show up on your dashboard. Click the button to claim it.
+11.   The order will go through the different stages on all dashboards in realtime. You can progress the order by marking each stage as complete on the relevant dashboard.
 
 # Resources
 
 ## Learn more about Medusa
 
-- [Website](https://www.medusajs.com/)
-- [GitHub](https://github.com/medusajs)
-- [2.0 Documentation](https://docs.medusajs.com/v2)
+-  [Website](https://www.medusajs.com/)
+-  [GitHub](https://github.com/medusajs)
+-  [2.0 Documentation](https://docs.medusajs.com/v2)
 
 ## Learn more about Next.js
 
-- [Website](https://nextjs.org/)
-- [GitHub](https://github.com/vercel/next.js)
-- [Documentation](https://nextjs.org/docs)
+-  [Website](https://nextjs.org/)
+-  [GitHub](https://github.com/vercel/next.js)
+-  [Documentation](https://nextjs.org/docs)

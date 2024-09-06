@@ -1,69 +1,66 @@
 import { MedusaError } from "@medusajs/utils";
 import { createStep, StepResponse } from "@medusajs/workflows-sdk";
 import { DriverDTO } from "../../../types/delivery/common";
-import { RestaurantAdminDTO } from "../../../types/restaurant/common";
+import { VendorAdminDTO } from "../../../types/vendor/common";
 import {
-  UpdateRestaurantsDTO,
-  UpdateRestaurantAdminsDTO,
-} from "../../../types/restaurant/mutations";
+   UpdateVendorsDTO,
+   UpdateVendorAdminsDTO,
+} from "../../../types/vendor/mutations";
 
-type UpdateUserStepInput = (
-  | UpdateRestaurantsDTO
-  | UpdateRestaurantAdminsDTO
-) & {
-  actor_type: "restaurant" | "driver";
+type UpdateUserStepInput = (UpdateVendorsDTO | UpdateVendorAdminsDTO) & {
+   actor_type: "vendor" | "driver";
 };
 
 export const updateUserStepId = "update-user-step";
 export const updateUserStep = createStep(
-  updateUserStepId,
-  async (
-    input: UpdateUserStepInput,
-    { container }
-  ): Promise<
-    StepResponse<RestaurantAdminDTO | DriverDTO, UpdateUserStepInput>
-  > => {
-    const { actor_type, ...data } = input;
+   updateUserStepId,
+   async (
+      input: UpdateUserStepInput,
+      { container }
+   ): Promise<
+      StepResponse<VendorAdminDTO | DriverDTO, UpdateUserStepInput>
+   > => {
+      const { actor_type, ...data } = input;
 
-    if (actor_type === "restaurant") {
-      const service = container.resolve("restaurantModuleService");
+      if (actor_type === "vendor") {
+         const service = container.resolve("vendorModuleService");
 
-      const compensationData = {
-        ...(await service.retrieveRestaurantAdmin(data.id)),
-        actor_type: "restaurant" as "restaurant",
-      };
+         const compensationData = {
+            ...(await service.retrieveVendorAdmin(data.id)),
+            actor_type: "vendor" as "vendor",
+         };
 
-      const restaurantAdmin = await service.updateRestaurantAdmins(data);
+         const vendorAdmin = await service.updateVendorAdmins(data);
 
-      return new StepResponse(restaurantAdmin, compensationData);
-    }
+         return new StepResponse(vendorAdmin, compensationData);
+      }
 
-    if (actor_type === "driver") {
-      const service = container.resolve("deliveryModuleService");
+      if (actor_type === "driver") {
+         const service = container.resolve("deliveryModuleService");
 
-      const compensationData = {
-        ...(await service.retrieveDriver(data.id)),
-        actor_type: "driver" as "driver",
-      };
+         const compensationData = {
+            ...(await service.retrieveDriver(data.id)),
+            actor_type: "driver" as "driver",
+         };
 
-      const driver = await service.updateDrivers(data);
+         const driver = await service.updateDrivers(data);
 
-      return new StepResponse(driver, compensationData);
-    }
+         return new StepResponse(driver, compensationData);
+      }
 
-    throw MedusaError.Types.INVALID_DATA;
-  },
-  function ({ actor_type, ...data }: UpdateUserStepInput, { container }) {
-    if (actor_type === "restaurant") {
-      const service = container.resolve("restaurantModuleService");
+      throw MedusaError.Types.INVALID_DATA;
+   },
+   function ({ actor_type, ...data }: UpdateUserStepInput, { container }) {
+      if (actor_type === "vendor") {
+         const service = container.resolve("vendorModuleService");
 
-      return service.updateRestaurantAdmins(data);
-    }
+         return service.updateVendorAdmins(data);
+      }
 
-    if (actor_type === "driver") {
-      const service = container.resolve("deliveryModuleService");
+      if (actor_type === "driver") {
+         const service = container.resolve("deliveryModuleService");
 
-      return service.updateDrivers(data);
-    }
-  }
+         return service.updateDrivers(data);
+      }
+   }
 );

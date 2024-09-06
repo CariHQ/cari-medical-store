@@ -1,76 +1,76 @@
 import { MedusaError } from "@medusajs/utils";
 import { createStep, StepResponse } from "@medusajs/workflows-sdk";
 import { DriverDTO } from "../../../types/delivery/common";
-import { RestaurantAdminDTO } from "../../../types/restaurant/common";
+import { VendorAdminDTO } from "../../../types/vendor/common";
 import {
-  CreateDriverInput,
-  CreateRestaurantAdminInput,
+   CreateDriverInput,
+   CreateVendorAdminInput,
 } from "../workflows/create-user";
 
-type CreateUserStepInput = (CreateRestaurantAdminInput | CreateDriverInput) & {
-  actor_type: "restaurant" | "driver";
+type CreateUserStepInput = (CreateVendorAdminInput | CreateDriverInput) & {
+   actor_type: "vendor" | "driver";
 };
 
 type CompensationStepInput = {
-  id: string;
-  actor_type: string;
+   id: string;
+   actor_type: string;
 };
 
 export const createUserStepId = "create-user-step";
 export const createUserStep = createStep(
-  createUserStepId,
-  async (
-    input: CreateUserStepInput,
-    { container }
-  ): Promise<
-    StepResponse<RestaurantAdminDTO | DriverDTO, CompensationStepInput>
-  > => {
-    if (input.actor_type === "restaurant") {
-      const service = container.resolve("restaurantModuleService");
+   createUserStepId,
+   async (
+      input: CreateUserStepInput,
+      { container }
+   ): Promise<
+      StepResponse<VendorAdminDTO | DriverDTO, CompensationStepInput>
+   > => {
+      if (input.actor_type === "vendor") {
+         const service = container.resolve("vendorModuleService");
 
-      const restaurantAdmin = await service.createRestaurantAdmins(
-        input as CreateRestaurantAdminInput
-      );
+         const vendorAdmin = await service.createVendorAdmins(
+            input as CreateVendorAdminInput
+         );
 
-      const compensationData = {
-        id: restaurantAdmin.id,
-        actor_type: "restaurant",
-      };
+         const compensationData = {
+            id: vendorAdmin.id,
+            actor_type: "vendor",
+         };
 
-      return new StepResponse(restaurantAdmin, compensationData);
-    }
+         return new StepResponse(vendorAdmin, compensationData);
+      }
 
-    if (input.actor_type === "driver") {
-      const service = container.resolve("deliveryModuleService");
+      if (input.actor_type === "driver") {
+         const service = container.resolve("deliveryModuleService");
 
-      const driver = await service.createDrivers(input as CreateDriverInput);
+         const driver = await service.createDrivers(input as CreateDriverInput);
 
-      const driverWithAvatar = await service.updateDrivers({
-        id: driver.id,
-        avatar_url: `https://robohash.org/${driver.id}?size=40x40&set=set1&bgset=bg1`,
-      });
+         const driverWithAvatar = await service.updateDrivers({
+            id: driver.id,
+            avatar_url: `https://robohash.org/${driver.id}?size=40x40&set=set1&bgset=bg1`,
+         });
 
-      const compensationData = {
-        id: driverWithAvatar.id,
-        actor_type: "driver",
-      };
+         const compensationData = {
+            id: driverWithAvatar.id,
+            actor_type: "driver",
+         };
 
-      return new StepResponse(driverWithAvatar, compensationData);
-    }
+         return new StepResponse(driverWithAvatar, compensationData);
+      }
 
-    throw MedusaError.Types.INVALID_DATA;
-  },
-  function ({ id, actor_type }: CompensationStepInput, { container }) {
-    if (actor_type === "restaurant") {
-      const service = container.resolve("restaurantModuleService");
+      throw MedusaError.Types.INVALID_DATA;
+   },
+   function ({ id, actor_type }: CompensationStepInput, { container }) {
+      if (actor_type === "vendor") {
+         const service = container.resolve("vendorModuleService");
 
-      return service.deleteRestaurantAdmin(id);
-    }
+         return service.deleteVendorAdmin(id);
+      }
 
-    if (actor_type === "driver") {
-      const service = container.resolve("deliveryModuleService");
+      if (actor_type === "driver") {
+         const service = container.resolve("deliveryModuleService");
 
-      return service.deleteDrivers(id);
-    }
-  }
+         return service.deleteDrivers(id);
+      }
+   }
 );

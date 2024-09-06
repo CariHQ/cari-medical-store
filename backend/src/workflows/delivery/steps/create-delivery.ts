@@ -2,46 +2,46 @@ import { MedusaError, remoteQueryObjectFromString } from "@medusajs/utils";
 import { StepResponse, createStep } from "@medusajs/workflows-sdk";
 
 export type CreateDeliveryStepInput = {
-  cart_id: string;
+   cart_id: string;
 };
 
 export const createDeliveryStepId = "create-delivery-step";
 export const createDeliveryStep = createStep(
-  createDeliveryStepId,
-  async function (input: CreateDeliveryStepInput, { container, context }) {
-    const remoteQuery = container.resolve("remoteQuery");
+   createDeliveryStepId,
+   async function (input: CreateDeliveryStepInput, { container, context }) {
+      const remoteQuery = container.resolve("remoteQuery");
 
-    const cartQuery = remoteQueryObjectFromString({
-      entryPoint: "carts",
-      variables: {
-        id: input.cart_id,
-      },
-      fields: ["id", "metadata.restaurant_id"],
-    });
+      const cartQuery = remoteQueryObjectFromString({
+         entryPoint: "carts",
+         variables: {
+            id: input.cart_id,
+         },
+         fields: ["id", "metadata.vendor_id"],
+      });
 
-    const cart = await remoteQuery(cartQuery).then((res) => res[0]);
+      const cart = await remoteQuery(cartQuery).then((res) => res[0]);
 
-    const restaurant_id = cart.metadata?.restaurant_id as string;
+      const vendor_id = cart.metadata?.vendor_id as string;
 
-    if (!restaurant_id) {
-      throw MedusaError.Types.INVALID_DATA;
-    }
+      if (!vendor_id) {
+         throw MedusaError.Types.INVALID_DATA;
+      }
 
-    const data = {
-      cart_id: cart.id,
-      restaurant_id,
-      transaction_id: context.transactionId,
-    };
+      const data = {
+         cart_id: cart.id,
+         vendor_id,
+         transaction_id: context.transactionId,
+      };
 
-    const service = container.resolve("deliveryModuleService");
+      const service = container.resolve("deliveryModuleService");
 
-    const delivery = await service.createDeliveries(data);
+      const delivery = await service.createDeliveries(data);
 
-    return new StepResponse(delivery, delivery.id);
-  },
-  (deliveryId: string, { container }) => {
-    const service = container.resolve("deliveryModuleService");
+      return new StepResponse(delivery, delivery.id);
+   },
+   (deliveryId: string, { container }) => {
+      const service = container.resolve("deliveryModuleService");
 
-    return service.softDeleteDeliveries(deliveryId);
-  }
+      return service.softDeleteDeliveries(deliveryId);
+   }
 );
