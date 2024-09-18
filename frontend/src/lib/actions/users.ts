@@ -40,7 +40,6 @@ export async function logout() {
 }
 
 export async function signup(prevState: FormState, data: FormData) {
-   console.log("hello");
    const user_type = data.get("user_type") as string;
    const vendor_id = data.get("vendor_id") as string;
    const first_name = data.get("first_name") as string;

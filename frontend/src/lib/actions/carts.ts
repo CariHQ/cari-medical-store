@@ -48,8 +48,6 @@ export async function createCart(
          .then((res) => res.json())
          .catch((e) => console.log(e));
 
-      console.log("wtf", cart);
-
       cookies().set("_medusa_cart_id", cart.id);
 
       revalidateTag("cart");
