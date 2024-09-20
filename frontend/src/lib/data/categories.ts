@@ -10,6 +10,11 @@ export async function listCategories() {
          next: {
             tags: ["vendors"],
          },
+         headers: {
+            // Authorization: `Bearer ${token}`,
+            "x-publishable-api-key":
+               process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY,
+         },
       }
    ).then((res) => res.json());
 

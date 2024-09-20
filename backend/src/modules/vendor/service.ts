@@ -1,10 +1,9 @@
 import { MedusaService } from "@medusajs/utils";
-import { Vendor, VendorAdmin, VendorProduct } from "./models";
+import { Vendor, VendorAdmin } from "./models";
 
 class VendorModuleService extends MedusaService({
-   Vendor,
-   VendorAdmin,
-   VendorProduct,
+  Vendor,
+  VendorAdmin,
 }) {}
 
 export default VendorModuleService;

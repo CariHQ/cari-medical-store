@@ -1,72 +1,46 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/medusa";
+import { RemoteQueryFunction } from "@medusajs/modules-sdk";
 import {
-   ContainerRegistrationKeys,
-   remoteQueryObjectFromString,
+  ContainerRegistrationKeys,
+  remoteQueryObjectFromString,
 } from "@medusajs/utils";
-import { getPricesByPriceSetId } from "../../../utils/get-prices-by-price-set-id";
+// import { getPricesByPriceSetId } from "../../../utils/get-prices-by-price-set-id";
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
-   const remoteQuery = req.scope.resolve(
-      ContainerRegistrationKeys.REMOTE_QUERY
-   );
+  const remoteQuery: RemoteQueryFunction = req.scope.resolve(
+    ContainerRegistrationKeys.REMOTE_QUERY
+  );
 
-   const vendorId = req.params.id;
+  const vendorId = req.params.id;
 
-   const vendorQuery = remoteQueryObjectFromString({
-      entryPoint: "vendors",
-      fields: ["*"],
-      variables: {
-         filters: {
-            id: vendorId,
-         },
+  const vendorQuery = remoteQueryObjectFromString({
+    entryPoint: "vendors",
+    fields: [
+      "*",
+      "products.*",
+      "products.categories.*",
+      "products.categories.*",
+      "products.variants.*",
+      "products.variants.calculated_price.*",
+      "deliveries.*",
+      "deliveries.cart.*",
+      "deliveries.cart.items.*",
+      "deliveries.order.*",
+      "deliveries.order.items.*",
+    ],
+    variables: {
+      filters: {
+        id: vendorId,
       },
-   });
-
-   const vendor = await remoteQuery(vendorQuery).then((r) => r[0]);
-
-   const vendorProductsQuery = remoteQueryObjectFromString({
-      entryPoint: "vendor_product",
-      fields: ["product_id"],
-      variables: {
-         filters: {
-            vendor_id: vendorId,
-         },
+      "products.variants.calculated_price": {
+        context: {
+          currency_code: "eur",
+        },
       },
-   });
+    },
+  });
 
-   const vendorProducts = await remoteQuery(vendorProductsQuery);
+  const vendor = await remoteQuery(vendorQuery).then((r) => r[0]);
 
-   const productsQuery = remoteQueryObjectFromString({
-      entryPoint: "products",
-      fields: [
-         "id",
-         "title",
-         "description",
-         "thumbnail",
-         "categories",
-         "categories.id",
-         "categories.handle",
-         "variants",
-         "variants.id",
-         "variants.price_set",
-         "variants.price_set.id",
-      ],
-      variables: {
-         filters: {
-            id: vendorProducts.map((p) => p.product_id),
-         },
-      },
-   });
-
-   const products = await remoteQuery(productsQuery);
-
-   const pricedProducts = await getPricesByPriceSetId({
-      products,
-      currency_code: "EUR",
-      pricingService: req.scope.resolve("pricingModuleService"),
-   });
-
-   vendor.products = pricedProducts;
-
-   return res.status(200).json({ vendor });
+  return res.status(200).json({ vendor });
 }

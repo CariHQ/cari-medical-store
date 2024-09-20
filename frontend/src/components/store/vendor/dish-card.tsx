@@ -33,7 +33,7 @@ export default function DishCard({
                €
                {
                   //@ts-ignore
-                  product.variants[0].price?.calculated_amount
+                  product.variants[0].price.calculated_amount
                }
             </Text>
          </div>

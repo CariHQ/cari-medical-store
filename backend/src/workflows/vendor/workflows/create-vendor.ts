@@ -1,20 +1,20 @@
 import {
-   createWorkflow,
-   WorkflowData,
-   WorkflowResponse,
+  createWorkflow,
+  WorkflowData,
+  WorkflowResponse,
 } from "@medusajs/workflows-sdk";
-import { CreateVendorDTO } from "../../../types/vendor/mutations";
+import { CreateVendorDTO } from "../../../modules/vendor/types/mutations";
 import { createVendorStep } from "../steps";
 
 type WorkflowInput = {
-   vendor: CreateVendorDTO;
+  vendor: CreateVendorDTO;
 };
 
 export const createVendorWorkflow = createWorkflow(
-   "create-vendor-workflow",
-   function (input: WorkflowData<WorkflowInput>) {
-      const vendor = createVendorStep(input.vendor);
+  "create-vendor-workflow",
+  function (input: WorkflowData<WorkflowInput>) {
+    const vendor = createVendorStep(input.vendor);
 
-      return new WorkflowResponse(vendor);
-   }
+    return new WorkflowResponse(vendor);
+  }
 );

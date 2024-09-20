@@ -104,7 +104,7 @@ export async function deleteProduct(productId: string, vendorId: string) {
    try {
       await fetch(`${BACKEND_URL}/vendors/${vendorId}/products`, {
          method: "DELETE",
-         body: JSON.stringify({ product_id: productId }),
+         body: JSON.stringify({ product_ids: [productId] }),
          next: {
             tags: ["products"],
          },

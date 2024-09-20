@@ -2,7 +2,6 @@
 
 import { getToken } from "@frontend/lib/data/users";
 import { CreateDriverDTO, CreateVendorAdminDTO } from "@frontend/lib/types";
-import { JWTPayload } from "jose";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import {
@@ -83,11 +82,16 @@ export async function signup(prevState: FormState, data: FormData) {
          createUserData.vendor_id = vendor_id;
       }
 
-      const { user, token: newToken } = await createUser(createUserData).catch(
-         (error) => {
-            throw new Error("Error creating user");
-         }
-      );
+      await createUser(createUserData).catch((error) => {
+         throw new Error("Error creating user");
+      });
+
+      const newToken = await createAuthUser({
+         email,
+         password,
+         actor_type,
+         provider: "emailpass",
+      });
 
       createSession(newToken);
       revalidateTag("user");

@@ -1,51 +1,51 @@
 import {
-   WorkflowData,
-   WorkflowResponse,
-   createWorkflow,
+  WorkflowData,
+  WorkflowResponse,
+  createWorkflow,
 } from "@medusajs/workflows-sdk";
 import {
-   awaitDeliveryStep,
-   awaitPickUpStep,
-   awaitPreparationStep,
-   awaitStartPreparationStep,
-   createDeliveryStep,
-   createFulfillmentStep,
-   createOrderStep,
-   findDriverStep,
-   notifyVendorStep,
+  awaitDeliveryStep,
+  awaitPickUpStep,
+  awaitPreparationStep,
+  awaitStartPreparationStep,
+  createFulfillmentStep,
+  createOrderStep,
+  findDriverStep,
+  notifyVendorStep,
+  setTransactionIdStep,
 } from "../../delivery/steps";
 
 type WorkflowInput = {
-   cart_id: string;
+  delivery_id: string;
 };
 
 const TWO_HOURS = 60 * 60 * 2;
 export const handleDeliveryWorkflowId = "handle-delivery-workflow";
 export const handleDeliveryWorkflow = createWorkflow(
-   {
-      name: handleDeliveryWorkflowId,
-      store: true,
-      retentionTime: TWO_HOURS,
-   },
-   function (input: WorkflowData<WorkflowInput>) {
-      const delivery = createDeliveryStep(input);
+  {
+    name: handleDeliveryWorkflowId,
+    store: true,
+    retentionTime: TWO_HOURS,
+  },
+  function (input: WorkflowData<WorkflowInput>): WorkflowResponse<string> {
+    setTransactionIdStep(input.delivery_id);
 
-      notifyVendorStep(delivery.id);
+    notifyVendorStep(input.delivery_id);
 
-      findDriverStep(delivery.id);
+    findDriverStep(input.delivery_id);
 
-      const order = createOrderStep(delivery.id);
+    const order = createOrderStep(input.delivery_id);
 
-      awaitStartPreparationStep();
+    awaitStartPreparationStep();
 
-      awaitPreparationStep();
+    awaitPreparationStep();
 
-      createFulfillmentStep(order);
+    createFulfillmentStep(order);
 
-      awaitPickUpStep();
+    awaitPickUpStep();
 
-      awaitDeliveryStep();
+    awaitDeliveryStep();
 
-      return new WorkflowResponse(delivery);
-   }
+    return new WorkflowResponse("Delivery completed");
+  }
 );

@@ -16,9 +16,15 @@ export async function createCart(
    vendor_id: string
 ): Promise<CartDTO | undefined> {
    const user = await retrieveUser();
-   const { regions } = await fetch(`${BACKEND_URL}/store/regions`).then((res) =>
-      res.json()
-   );
+   console.log(user);
+   const { regions } = await fetch(`${BACKEND_URL}/store/regions`, {
+      headers: {
+         "x-publishable-api-key":
+            process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY,
+      },
+   }).then((res) => res.json());
+
+   console.log("regioms: ", regions);
 
    const region = regions[0];
 
@@ -39,6 +45,8 @@ export async function createCart(
             body: JSON.stringify(body),
             headers: {
                "Content-Type": "application/json",
+               "x-publishable-api-key":
+                  process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY,
             },
             next: {
                tags: ["cart"],
@@ -86,6 +94,8 @@ export async function addToCart(
          method: "POST",
          headers: {
             "Content-Type": "application/json",
+            "x-publishable-api-key":
+               process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY,
          },
          body: JSON.stringify({
             variant_id: variantId,
@@ -115,6 +125,11 @@ export async function removeItemFromCart(
             method: "DELETE",
             next: {
                tags: ["cart"],
+            },
+            headers: {
+               "Content-Type": "application/json",
+               "x-publishable-api-key":
+                  process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY,
             },
          }
       ).then((res) => res.json());

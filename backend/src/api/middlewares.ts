@@ -37,13 +37,13 @@ export default defineMiddlewares({
       ],
     },
     {
-      method: ["POST"],
-      matcher: "/vendors/:id/products",
-      middlewares: [
-        authenticate(["vendor", "admin"], "bearer", {
-          allowUnregistered: true,
-        }),
-      ],
+      method: ["POST", "DELETE"],
+      matcher: "/vendors/:id/**",
+      middlewares: [authenticate(["vendor", "admin"], "bearer")],
+    },
+    {
+      matcher: "/vendors/:id/admin/**",
+      middlewares: [authenticate(["vendor", "admin"], "bearer")],
     },
   ],
 });

@@ -1,19 +1,19 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/medusa";
 import { remoteQueryObjectFromString } from "@medusajs/utils";
-import zod from "zod";
+import { z } from "zod";
 import {
   DeliveryItemDTO,
   DeliveryStatus,
-} from "../../../types/delivery/common";
-import { UpdateDeliveryDTO } from "../../../types/delivery/mutations";
+} from "../../../modules/delivery/types/common";
+import { UpdateDeliveryDTO } from "../../../modules/delivery/types/mutations";
 import { updateDeliveryWorkflow } from "../../../workflows/delivery/workflows";
 
-const schema = zod.object({
-  driver_id: zod.string().optional(),
-  notified_driver_ids: zod.array(zod.string()).optional(),
-  order_id: zod.string().optional(),
-  delivery_status: zod.nativeEnum(DeliveryStatus).optional(),
-  eta: zod.date().optional(),
+const schema = z.object({
+  driver_id: z.string().optional(),
+  notified_driver_ids: z.array(z.string()).optional(),
+  order_id: z.string().optional(),
+  delivery_status: z.nativeEnum(DeliveryStatus).optional(),
+  eta: z.date().optional(),
 });
 
 export async function POST(req: MedusaRequest, res: MedusaResponse) {
@@ -38,7 +38,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     });
 
     return res.status(200).json({ delivery });
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 }
@@ -50,7 +50,14 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
   const deliveryQuery = remoteQueryObjectFromString({
     entryPoint: "deliveries",
-    fields: ["*"],
+    fields: [
+      "*",
+      "cart.*",
+      "cart.items.*",
+      "order.*",
+      "order.items.*",
+      "vendor.*",
+    ],
     variables: {
       filters: {
         id: deliveryId,
@@ -65,42 +72,8 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
   }
 
   try {
-    const items = [] as DeliveryItemDTO[];
-
-    if (delivery.cart_id) {
-      const cartQuery = remoteQueryObjectFromString({
-        entryPoint: "carts",
-        fields: ["items.*"],
-        variables: {
-          filters: {
-            id: delivery.cart_id,
-          },
-        },
-      });
-
-      const cart = await remoteQuery(cartQuery).then((r) => r[0]);
-
-      items.push(...(cart.items as DeliveryItemDTO[]));
-    } else if (delivery.order_id) {
-      const orderQuery = remoteQueryObjectFromString({
-        entryPoint: "orders",
-        fields: ["items.*"],
-        variables: {
-          filters: {
-            id: delivery.order_id,
-          },
-        },
-      });
-
-      const order = await remoteQuery(orderQuery).then((r) => r[0]);
-
-      items.push(...order.items);
-    }
-
-    delivery.items = items;
-
     return res.status(200).json({ delivery });
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 }

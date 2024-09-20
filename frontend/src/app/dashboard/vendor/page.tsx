@@ -2,11 +2,7 @@ import AccountBadge from "@frontend/components/dashboard/account-badge";
 import DeliveryColumn from "@frontend/components/dashboard/delivery-column";
 import RealtimeClient from "@frontend/components/dashboard/realtime-client";
 import VendorStatus from "@frontend/components/dashboard/vendor/vendor-status";
-import {
-   listDeliveries,
-   retrieveVendor,
-   retrieveUser,
-} from "@frontend/lib/data";
+import { retrieveVendor, retrieveUser } from "@frontend/lib/data";
 import { DeliveryStatus } from "@frontend/lib/types";
 import { Container, Heading, StatusBadge, Text } from "@medusajs/ui";
 import { Link } from "next-view-transitions";
@@ -25,11 +21,7 @@ export default async function VendorDashboardPage() {
 
    const vendorId = user.vendor_id;
    const vendor = await retrieveVendor(vendorId);
-
-   const deliveries = await listDeliveries({
-      vendor_id: vendorId,
-   });
-   const openStatus = vendor.is_open;
+   const { name, deliveries, is_open } = vendor;
 
    return (
       <>
@@ -46,9 +38,9 @@ export default async function VendorDashboardPage() {
                   <div className="flex gap-2">
                      <Text>Vendor status: </Text>{" "}
                      <StatusBadge
-                        color={openStatus ? "green" : "red"}
+                        color={is_open ? "green" : "red"}
                         className="flex pl-1 pr-2 py-1 gap-1 w-fit">
-                        {openStatus ? "Taking orders" : "Closed"}
+                        {is_open ? "Taking orders" : "Closed"}
                      </StatusBadge>
                      <VendorStatus vendor={vendor} />
                   </div>

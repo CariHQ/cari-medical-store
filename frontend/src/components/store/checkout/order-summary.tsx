@@ -1,16 +1,10 @@
-import { retrieveCart, retrieveVendor } from "@frontend/lib/data";
+import { retrieveVendor } from "@frontend/lib/data";
+import { CartDTO } from "@medusajs/types";
 import { Container, Heading, Text } from "@medusajs/ui";
-import { cookies } from "next/headers";
 import Image from "next/image";
 
-export async function OrderSummary() {
-   const cartId = cookies().get("_medusa_cart_id")?.value;
-   if (!cartId) {
-      return null;
-   }
-   const cart = await retrieveCart(cartId);
-
-   const vendor = await retrieveVendor(cart.metadata?.vendor_id as string);
+export async function OrderSummary({ cart }: { cart: CartDTO }) {
+   const vendor = await retrieveVendor(cart?.metadata?.vendor_id as string);
 
    return (
       <Container className="flex flex-col gap-4">

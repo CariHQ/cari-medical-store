@@ -15,6 +15,8 @@ export async function retrieveUser() {
    const { user } = await fetch(`${BACKEND_URL}/users/me`, {
       headers: {
          Authorization: `Bearer ${token}`,
+         // "x-publishable-api-key":
+         //    process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY,
       },
       next: {
          tags: ["user"],
@@ -53,7 +55,11 @@ export async function getToken({
             tags: ["user"],
          },
       }
-   ).then((res) => res.json());
+   )
+      .then((res) => res.json())
+      .catch((e) => {
+         console.log(e);
+      });
 
    if (!token) {
       throw new Error("Invalid email or password");
